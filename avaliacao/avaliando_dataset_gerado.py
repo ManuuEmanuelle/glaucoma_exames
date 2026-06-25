@@ -3,7 +3,7 @@ import sys
 
 sys.path.append(os.path.dirname(__file__))
 
-from glaucoma_exames.glaucoma.avaliacao.metricas import calcular_bleu, calcular_rouge, similaridade_semantica
+from avaliacao.metricas import calcular_bleu, calcular_rouge, similaridade_semantica
 
 def avaliar_dataset(dataset_path, laudos_path, limite=None):
 

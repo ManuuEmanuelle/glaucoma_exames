@@ -2,14 +2,14 @@ import numpy as np
 import os
 
 #from preprocessamento.processing import processar_pdfs
-from glaucoma_exames.glaucoma.preprocessamento.processing import processar_pdfs
-from glaucoma_exames.glaucoma.modelo import processar_exames
-from glaucoma_exames.glaucoma.avaliacao.avaliando_dataset_gerado import avaliar_dataset
+from preprocessamento.processing import processar_pdfs
+from modelo import processar_exames
+from avaliacao.avaliando_dataset_gerado import avaliar_dataset
 
 
 def main():
 
-    base_dir = "/home/emanuelle/Projeto de pesquisa/glaucoma/dados"
+    base_dir = "/home/emanuelle/Projeto de pesquisa/glaucoma_exames/dados"
 
     pasta_pdfs = os.path.join(base_dir, "pdfs")
     #exames_imagens = os.path.join(base_dir, "exames_imagem")

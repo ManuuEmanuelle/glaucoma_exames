@@ -122,7 +122,7 @@ REGRAS DE COMPORTAMENTO DO MODELO
     temperature=0.1
 )
 
-    print(f"Tamanho do prompt: {len(prompt)}")
+    #print(f"Tamanho do prompt: {len(prompt)}")
 
     return completion.choices[0].message.content
 
@@ -170,13 +170,6 @@ def processar_exames(
             ""
         )
 
-        dados_exame = (
-            carregar_json_exame(
-                exames_json_folder,
-                paciente
-            )
-        )
-
         paciente_folder = os.path.join(
             output_folder,
             paciente
@@ -186,7 +179,21 @@ def processar_exames(
             paciente_folder,
             exist_ok=True
         )
+        laudo_path = os.path.join(
+            paciente_folder,
+            "laudo.txt"
+        )
 
+        if os.path.join(laudo_path):
+            print("Laudo já existe. Pulando para o próximo")
+
+        dados_exame = (
+            carregar_json_exame(
+                exames_json_folder,
+                paciente
+            )
+        )
+        
         inicio = time.time()
 
         laudo = gerar_laudo(
@@ -201,10 +208,7 @@ def processar_exames(
             tempo_laudo
         )
 
-        laudo_path = os.path.join(
-            paciente_folder,
-            "laudo.txt"
-        )
+
 
         with open(
             laudo_path,
