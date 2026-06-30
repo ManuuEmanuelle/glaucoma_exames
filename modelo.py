@@ -184,8 +184,9 @@ def processar_exames(
             "laudo.txt"
         )
 
-        if os.path.join(laudo_path):
+        if os.path.exists(laudo_path):
             print("Laudo já existe. Pulando para o próximo")
+            continue
 
         dados_exame = (
             carregar_json_exame(
