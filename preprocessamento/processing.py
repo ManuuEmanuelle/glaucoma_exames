@@ -15,9 +15,16 @@ def processar_pdfs(pdf_folder, dados):
 
     for i, file in enumerate(arquivos_pdf, start=1):
 
+        paciente = f"paciente_{i}"
+
+        json_resultado_path = os.path.join(exames_json_folder, paciente)
+
+        if os.path.exists(json_resultado_path):
+            print("Pdf já processado")
+            continue
+
         pdf_path = os.path.join(pdf_folder, file)
 
-        paciente = f"paciente_{i}"
 
         doc = fitz.open(pdf_path)
 

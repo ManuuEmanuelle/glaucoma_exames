@@ -156,11 +156,20 @@ def processar_exames(
         key=extrair_numero_paciente
     )
 
-    tempos = []
+    tempos_path = os.path.join(output_folder, "tempos_laudos.json")
 
-    for i, file in enumerate(
-        arquivos_json
-    ):
+    if os.path.exists(tempos_path):
+        with open(tempos_path, "r", encoding="utf-8") as f:
+            tempos = json.load(f)
+
+    else:
+        tempos = {}
+
+
+    for file in enumerate(arquivos_json):
+
+        if isinstance(file, tuple):
+            file = file[1]
 
         #if i >= 25:
         #   break
@@ -205,10 +214,11 @@ def processar_exames(
 
         tempo_laudo = fim - inicio
 
-        tempos.append(
-            tempo_laudo
-        )
+        tempos[paciente] = tempo_laudo
 
+
+        with open(tempos_path, "w", encoding="utf-8") as f:
+            json.dump(tempos, f, indent=4,ensure_ascii=False)
 
 
         with open(
@@ -219,19 +229,22 @@ def processar_exames(
 
             f.write(laudo)
 
-        print(
-            f"{paciente} processado "
-            f"em {tempo_laudo:.2f} segundos"
-        )
+        
 
-    if tempos:
+    if tempos_path:
+
+        lista_tempos = list(tempos_path.values())
+
 
         media_tempo = (
-            sum(tempos) / len(tempos)
+            sum(lista_tempos) / len(lista_tempos)
         )
 
-        print(
-            f"Média de tempo por laudo: "
-            f"Tempo total de execução:{sum(tempos)}"
-            f"{media_tempo:.2f} segundos"
-        )
+        tempo_total_execucao = sum(lista_tempos)
+
+
+
+        print("\n--- MÉTRICAS DE EXECUÇÃO ACUMULADAS ---")
+        
+        print(f"Média de tempo por laudo: {media_tempo:.2f} segundos")
+        print(f"Tempo total de processamento: {tempo_total_execucao:.2f} segundos")
