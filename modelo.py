@@ -233,7 +233,7 @@ def processar_exames(
 
     if tempos_path:
 
-        lista_tempos = list(tempos_path.values())
+        lista_tempos = list(tempos.values())
 
 
         media_tempo = (
@@ -247,4 +247,4 @@ def processar_exames(
         print("\n--- MÉTRICAS DE EXECUÇÃO ACUMULADAS ---")
         
         print(f"Média de tempo por laudo: {media_tempo:.2f} segundos")
-        print(f"Tempo total de processamento: {tempo_total_execucao:.2f} segundos")
+        print(f"Tempo total de processamento: {tempo_total_execucao:.2f} segundos\n")
