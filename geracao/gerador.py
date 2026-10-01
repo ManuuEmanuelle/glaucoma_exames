@@ -4,24 +4,19 @@ from .prompt_laudo import criar_prompt_laudo
 from .modelos import gerar_resposta_modelo
 
 
-def gerar_laudo(
-    dados_exame,
-    modelo
-):
 
-    prompt = criar_prompt_laudo(
-        dados_exame
-    )
+def gerar_laudo(dados_exame, modelo):
 
-    inicio = time.time()
+        prompt = criar_prompt_laudo(dados_exame)
 
-    laudo = gerar_resposta_modelo(
-        prompt,
-        modelo
-    )
+        inicio = time.time()
 
-    fim = time.time()
+        laudo = gerar_resposta_modelo(prompt,modelo)
 
-    tempo = fim - inicio
+        fim = time.time()
 
-    return laudo, tempo
+        tempo = fim - inicio
+
+      
+
+        return laudo, tempo

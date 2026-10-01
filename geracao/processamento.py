@@ -15,20 +15,14 @@ def processar_exames(exames_json_folder, output_folder, modelo):
 
     os.makedirs(output_folder, exist_ok=True)
 
-    arquivos_json = [
-        arquivo
-        for arquivo in os.listdir(exames_json_folder)
-        if arquivo.endswith(".json")
-    ]
+    arquivos_json = [arquivo for arquivo in os.listdir(exames_json_folder) if arquivo.endswith(".json")]
 
     arquivos_json.sort(key=extrair_numero_paciente)
 
-    tempos_path = os.path.join(
-        output_folder,
-        "tempos_laudos.json"
-    )
+    tempos_path = os.path.join(output_folder,"tempos_laudos.json")
 
     if os.path.exists(tempos_path):
+
         with open(tempos_path, "r", encoding="utf-8") as f:
             tempos = json.load(f)
     else:
@@ -38,31 +32,19 @@ def processar_exames(exames_json_folder, output_folder, modelo):
 
         paciente = arquivo.replace(".json", "")
 
-        paciente_folder = os.path.join(
-            output_folder,
-            paciente
-        )
+        paciente_folder = os.path.join(output_folder,paciente)
 
         os.makedirs(paciente_folder, exist_ok=True)
 
-        laudo_path = os.path.join(
-            paciente_folder,
-            "laudo.txt"
-        )
+        laudo_path = os.path.join(paciente_folder,"laudo.txt")
 
         if os.path.exists(laudo_path):
             print(f"[{modelo}] {paciente}: laudo já existe.")
             continue
 
-        dados_exame = carregar_json_exame(
-            exames_json_folder,
-            paciente
-        )
+        dados_exame = carregar_json_exame(exames_json_folder,paciente)
 
-        laudo, tempo = gerar_laudo(
-            dados_exame,
-            modelo
-        )
+        laudo, tempo = gerar_laudo(dados_exame,modelo)
 
         tempos[paciente] = tempo
 
@@ -70,12 +52,7 @@ def processar_exames(exames_json_folder, output_folder, modelo):
             f.write(laudo)
 
         with open(tempos_path, "w", encoding="utf-8") as f:
-            json.dump(
-                tempos,
-                f,
-                indent=4,
-                ensure_ascii=False
-            )
+            json.dump(tempos,f,indent=4,ensure_ascii=False)
 
         print(f"[{modelo}] {paciente}: concluído.")
 

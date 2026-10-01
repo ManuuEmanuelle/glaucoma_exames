@@ -6,13 +6,9 @@ from groq import Groq
 
 load_dotenv()
 
-groq_client = Groq(
-    api_key=os.getenv("GROQ_API_KEY")
-)
+groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-genai.configure(
-    api_key=os.getenv("GOOGLE_API_KEY")
-)
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 
 MODELOS = {
@@ -21,11 +17,7 @@ MODELOS = {
         "model": "gemini-2.5-flash",
         "output": "./resultados/gemini"
     },
-    "llama": {
-        "provider": "groq",
-        "model": "llama-3.3-70b-versatile",
-        "output": "./resultados/llama"
-    },
+    
     "gpt": {
         "provider": "groq",
         "model": "openai/gpt-oss-20b",
@@ -40,9 +32,7 @@ def gerar_resposta_modelo(prompt, modelo):
 
     if config["provider"] == "google":
 
-        model = genai.GenerativeModel(
-            config["model"]
-        )
+        model = genai.GenerativeModel(config["model"])
 
         resposta = model.generate_content(prompt)
 
@@ -65,6 +55,4 @@ def gerar_resposta_modelo(prompt, modelo):
 
     else:
 
-        raise ValueError(
-            f"Provider '{config['provider']}' não suportado."
-        )
+        raise ValueError(f"Provider '{config['provider']}' não suportado.")
