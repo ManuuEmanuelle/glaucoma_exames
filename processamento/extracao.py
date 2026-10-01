@@ -1,7 +1,7 @@
 import os
 import re
 
-from .conversores import converter_valor, calcular_percentual
+from .conversores import converter_valor
 
 CAMPOS_HUMPHREY = {
     "olho": {
@@ -96,20 +96,14 @@ def extrair_campos(texto, campos):
 
     for nome, config in campos.items():
 
-        match = re.search(
-            config["regex"],
-            texto
-        )
+        match = re.search(config["regex"],texto)
 
         if not match:
             continue
 
         valor = match.group(1)
 
-        valor = converter_valor(
-            valor,
-            config["tipo"]
-        )
+        valor = converter_valor(valor,config["tipo"])
 
         dados[nome] = valor
 

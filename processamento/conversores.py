@@ -8,10 +8,7 @@ def calcular_percentual(valor):
 
         if "/" in valor:
 
-            numerador, denominador = map(
-                int,
-                valor.split("/")
-            )
+            numerador, denominador = map(int, valor.split("/"))
 
             if denominador == 0:
                 return None
@@ -20,17 +17,9 @@ def calcular_percentual(valor):
                 numerador / denominador
             ) * 100
 
-        return float(
-            valor
-            .replace("%", "")
-            .replace(",", ".")
-        )
+        return float(valor.replace("%", "").replace(",", "."))
 
-    except (
-        ValueError,
-        ZeroDivisionError,
-        AttributeError
-    ):
+    except (ValueError,ZeroDivisionError,AttributeError):
         return None
 
 

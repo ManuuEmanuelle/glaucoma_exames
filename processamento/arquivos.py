@@ -2,16 +2,9 @@ import os
 import json
 
 
-def salvar_json_exames(
-    exames,
-    paciente,
-    exames_json_folder
-):
+def salvar_json_exames(exames, paciente, exames_json_folder):
 
-    os.makedirs(
-        exames_json_folder,
-        exist_ok=True
-    )
+    os.makedirs(exames_json_folder, exist_ok=True)
 
     dados = {
         paciente: {
@@ -25,9 +18,4 @@ def salvar_json_exames(
     )
 
     with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(
-            dados,
-            f,
-            ensure_ascii=False,
-            indent=4
-        )
+        json.dump(dados, f, ensure_ascii=False, indent=4)

@@ -254,8 +254,6 @@ def classificar_campos(dados):
 
         classificacao = funcao(valor)
 
-        dados_classificados[
-            f"{nome}_classificacao"
-        ] = classificacao
+        dados_classificados[f"{nome}_classificacao"] = classificacao
 
     return dados_classificados
