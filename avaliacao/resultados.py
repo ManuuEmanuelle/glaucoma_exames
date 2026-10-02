@@ -7,17 +7,11 @@ def calcular_medias(resultados):
 
     medias = {}
 
-    modelos = sorted(
-        set(resultado["modelo"] for resultado in resultados)
-    )
+    modelos = sorted(set(resultado["modelo"] for resultado in resultados))
 
     for modelo in modelos:
 
-        resultados_modelo = [
-            resultado
-            for resultado in resultados
-            if resultado["modelo"] == modelo
-        ]
+        resultados_modelo = [resultado for resultado in resultados if resultado["modelo"] == modelo]
 
         if not resultados_modelo:
             continue
@@ -26,45 +20,28 @@ def calcular_medias(resultados):
         rouge1 = []
         rougeL = []
         similaridades = []
-
-        # Notas do LLM-as-a-Judge
         notas_juiz = {}
 
         for resultado in resultados_modelo:
 
             metricas = resultado["metricas"]
 
-            # BLEU
             if metricas.get("bleu") is not None:
-                bleus.append(
-                    metricas["bleu"]
-                )
+                bleus.append(metricas["bleu"])
 
-            # ROUGE-1
             if metricas.get("rouge"):
-                rouge1.append(
-                    metricas["rouge"]["rouge1"]["f1"]
-                )
+                rouge1.append(metricas["rouge"]["rouge1"]["f1"])
+                rougeL.append(metricas["rouge"]["rougeL"]["f1"])
 
-                # ROUGE-L
-                rougeL.append(
-                    metricas["rouge"]["rougeL"]["f1"]
-                )
-
-            # Similaridade semântica
             if metricas.get("similaridade_semantica") is not None:
-                similaridades.append(
-                    metricas["similaridade_semantica"]
-                )
+                similaridades.append(metricas["similaridade_semantica"])
 
-            # LLM-as-a-Judge
             juiz = metricas.get("llm_juiz")
 
             if juiz:
 
                 for chave, valor in juiz.items():
 
-                    # Considera somente valores numéricos
                     if isinstance(valor, (int, float)):
 
                         if chave not in notas_juiz:
@@ -75,35 +52,24 @@ def calcular_medias(resultados):
         medias_modelo = {}
 
         if bleus:
-            medias_modelo["bleu"] = float(
-                np.mean(bleus)
-            )
+            medias_modelo["bleu"] = float(np.mean(bleus))
 
         if rouge1:
-            medias_modelo["rouge1_f1"] = float(
-                np.mean(rouge1)
-            )
+            medias_modelo["rouge1_f1"] = float(np.mean(rouge1))
 
         if rougeL:
-            medias_modelo["rougeL_f1"] = float(
-                np.mean(rougeL)
-            )
+            medias_modelo["rougeL_f1"] = float(np.mean(rougeL))
 
         if similaridades:
-            medias_modelo["similaridade_semantica"] = float(
-                np.mean(similaridades)
-            )
+            medias_modelo["similaridade_semantica"] = float(np.mean(similaridades))
 
-        # Médias das avaliações do LLM juiz
         if notas_juiz:
 
             medias_modelo["llm_juiz"] = {}
 
             for chave, valores in notas_juiz.items():
 
-                medias_modelo["llm_juiz"][chave] = float(
-                    np.mean(valores)
-                )
+                medias_modelo["llm_juiz"][chave] = float(np.mean(valores))
 
         medias[modelo] = medias_modelo
 
@@ -111,9 +77,7 @@ def calcular_medias(resultados):
 
 
 def exibir_resultados(resultados):
-    """
-    Exibe as métricas de cada paciente e modelo.
-    """
+
 
     print("\n")
     print("=" * 70)
@@ -131,13 +95,11 @@ def exibir_resultados(resultados):
         print(f"Paciente: {paciente}")
         print(f"Modelo: {modelo}")
 
-        # BLEU
         bleu = metricas.get("bleu")
 
         if bleu is not None:
             print(f"BLEU: {bleu:.4f}")
 
-        # ROUGE
         rouge = metricas.get("rouge")
 
         if rouge:
@@ -152,7 +114,6 @@ def exibir_resultados(resultados):
                 f"{rouge['rougeL']['f1']:.4f}"
             )
 
-        # Similaridade
         similaridade = metricas.get(
             "similaridade_semantica"
         )
@@ -164,16 +125,13 @@ def exibir_resultados(resultados):
                 f"{similaridade:.4f}"
             )
 
-        # LLM-as-a-Judge
         print("\nLLM-AS-A-JUDGE:")
 
         juiz = metricas.get("llm_juiz")
 
         if juiz is None:
 
-            print(
-                "  Avaliação não disponível."
-            )
+            print("Avaliação não disponível.")
 
         else:
 
@@ -181,21 +139,14 @@ def exibir_resultados(resultados):
 
                 if isinstance(valor, (int, float)):
 
-                    print(
-                        f"  {chave}: {valor}"
-                    )
+                    print(f"  {chave}: {valor}")
 
                 else:
 
-                    print(
-                        f"  {chave}: {valor}"
-                    )
+                    print(f"  {chave}: {valor}")
 
 
 def exibir_medias(medias):
-    """
-    Exibe as médias das métricas por modelo.
-    """
 
     print("\n")
     print("=" * 70)
@@ -242,68 +193,26 @@ def exibir_medias(medias):
 
             for chave, valor in valores["llm_juiz"].items():
 
-                print(
-                    f"  {chave}: {valor:.2f}"
-                )
+                print(f"  {chave}: {valor:.2f}")
 
 
-def salvar_resultados(
-    resultados,
-    medias,
-    resultados_folder
-):
-    """
-    Salva os resultados individuais e as médias
-    em arquivos JSON.
-    """
+def salvar_resultados(resultados,medias,resultados_folder):
 
-    pasta_avaliacao = os.path.join(
-        resultados_folder,
-        "avaliacao"
-    )
+    pasta_avaliacao = os.path.join(resultados_folder,"avaliacao")
 
-    os.makedirs(
-        pasta_avaliacao,
-        exist_ok=True
-    )
+    os.makedirs(pasta_avaliacao,exist_ok=True)
 
-    # Resultados individuais
-    resultados_path = os.path.join(
-        pasta_avaliacao,
-        "resultados_avaliacao.json"
-    )
+    resultados_path = os.path.join(pasta_avaliacao,"resultados_avaliacao.json")
 
-    with open(
-        resultados_path,
-        "w",
-        encoding="utf-8"
-    ) as f:
+    with open(resultados_path,"w",encoding="utf-8") as f:
 
-        json.dump(
-            resultados,
-            f,
-            indent=4,
-            ensure_ascii=False
-        )
+        json.dump(resultados,f,indent=4,ensure_ascii=False)
 
-    # Médias
-    medias_path = os.path.join(
-        pasta_avaliacao,
-        "medias_metricas.json"
-    )
+    medias_path = os.path.join(pasta_avaliacao,"medias_metricas.json")
 
-    with open(
-        medias_path,
-        "w",
-        encoding="utf-8"
-    ) as f:
+    with open(medias_path,"w",encoding="utf-8") as f:
 
-        json.dump(
-            medias,
-            f,
-            indent=4,
-            ensure_ascii=False
-        )
+        json.dump(medias,f,indent=4,ensure_ascii=False)
 
     print("\n")
     print("=" * 70)
