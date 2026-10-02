@@ -12,5 +12,8 @@ dados/pdfs/
 dados/dataset/
 dados/exames_texto/
 dados/laudos_texto/
+resultados/
+
+
 
 .ipynb_checkpoints/
