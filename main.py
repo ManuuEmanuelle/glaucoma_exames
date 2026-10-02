@@ -1,51 +1,56 @@
-import numpy as np
 import os
 
-#from preprocessamento.processing import processar_pdfs
-from preprocessamento.processing import processar_pdfs
-from modelo import processar_exames
-from avaliacao.avaliando_dataset_gerado import avaliar_dataset
+from processamento.processamento_exames import processar_pdfs
+from geracao.processamento import processar_exames
+from avaliacao.avaliar_laudos import avaliar_laudos
+from avaliacao.resultados import calcular_medias, exibir_resultados, exibir_medias,salvar_resultados
+
+
+PDF_FOLDER = "./dados/pdfs"
+EXAMES_JSON_FOLDER = "./dados/exames_json"
+LAUDOS_TEXTO_FOLDER = "./dados/laudos_texto"
+RESULTADOS_FOLDER = "./resultados"
+
+MODELOS = ["gemini","gpt"]
 
 
 def main():
 
-    base_dir = "/home/emanuelle/Projeto de pesquisa/glaucoma_exames/dados"
+    print("=" * 60)
+    print("PIPELINE DE GERAÇÃO DE LAUDOS DE GLAUCOMA")
+    print("=" * 60)
 
-    pasta_pdfs = os.path.join(base_dir, "pdfs")
-    #exames_imagens = os.path.join(base_dir, "exames_imagem")
-    exames_texto = os.path.join(base_dir, "exames_texto")
-    laudos_originais = os.path.join(base_dir, "laudos_texto")
-    dataset_gerado = os.path.join(base_dir, "dataset")
+    print("\n[1/3] Processando exames...")
 
-    
-    processar_pdfs(pasta_pdfs, base_dir)
+    processar_pdfs(PDF_FOLDER,EXAMES_JSON_FOLDER,LAUDOS_TEXTO_FOLDER)
 
-    
-    processar_exames(exames_texto, dataset_gerado)
+    print("\n[2/3] Gerando laudos...")
 
-   
-    resultados = avaliar_dataset(
-        dataset_gerado,
-        laudos_originais,
-        limite=10
-    )
+    for modelo in MODELOS:
 
-    
-    for r in resultados:
-        print(r)
+        print(f"\nModelo: {modelo}")
 
-  
-    bleus = [r["bleu"] for r in resultados]
-    rouge1 = [r["rouge"]["rouge1"].fmeasure for r in resultados]
-    rougel = [r["rouge"]["rougeL"].fmeasure for r in resultados]
-    sims = [r["sim"] for r in resultados]
+        output_folder = os.path.join(RESULTADOS_FOLDER,modelo)
 
-    print("\nMÉDIAS DAS MÉTRICAS:")
-    
-    print(f"BLEU médio: {np.mean(bleus):.4f}")
-    print(f"ROUGE-1 médio: {np.mean(rouge1):.4f}")
-    print(f"ROUGE-L médio: {np.mean(rougel):.4f}")
-    print(f"Similaridade semântica média: {np.mean(sims):.4f}")
+        processar_exames(EXAMES_JSON_FOLDER,output_folder,modelo)
+
+    print("\n[3/3] Avaliando laudos...")
+
+    resultados = avaliar_laudos(referencia_folder=LAUDOS_TEXTO_FOLDER,resultados_folder=RESULTADOS_FOLDER,modelos=MODELOS)
+
+    print(f"\nLaudos avaliados: {len(resultados)}")
+
+    exibir_resultados(resultados)
+
+    medias = calcular_medias(resultados)
+
+    exibir_medias(medias)
+
+    salvar_resultados(resultados,medias,RESULTADOS_FOLDER)
+
+    print("\n" + "=" * 60)
+    print("PIPELINE CONCLUÍDO")
+    print("=" * 60)
 
 
 if __name__ == "__main__":
