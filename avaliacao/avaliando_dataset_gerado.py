@@ -3,7 +3,7 @@ import sys
 
 sys.path.append(os.path.dirname(__file__))
 
-from avaliacao.metricas import calcular_bleu, calcular_rouge, similaridade_semantica
+from metricas import calcular_bleu, calcular_rouge, calcular_similaridade_semantica
 
 def avaliar_dataset(dataset_path, laudos_path, limite=None):
 
@@ -25,7 +25,7 @@ def avaliar_dataset(dataset_path, laudos_path, limite=None):
         print(laudo_gerado_path)
 
     
-        laudo_original_path = os.path.join(laudos_path, f"{paciente}_laudo.txt")
+        laudo_original_path = os.path.join(laudos_path, f"paciente_{paciente}_laudo.txt")
         print(laudo_original_path)
 
         if not os.path.exists(laudo_gerado_path):
@@ -45,7 +45,7 @@ def avaliar_dataset(dataset_path, laudos_path, limite=None):
       
         bleu = calcular_bleu(laudo_original, laudo_gerado)
         rouge = calcular_rouge(laudo_original, laudo_gerado)
-        sim = similaridade_semantica(laudo_original, laudo_gerado)
+        sim = calcular_similaridade_semantica(laudo_original, laudo_gerado)
 
         resultados.append({
             "paciente": paciente,

@@ -1,9 +1,7 @@
 from collections import defaultdict
 
 
-def calcular_media_confiabilidade(
-    resultados
-):
+def calcular_media_confiabilidade(resultados):
 
     valores = defaultdict(list)
 
@@ -11,37 +9,20 @@ def calcular_media_confiabilidade(
 
         modelo = resultado["modelo"]
 
-        confiabilidade = (
-            resultado
-            ["avaliacoes"]
-            ["confiabilidade_laudo_gerado"]
-            ["confiabilidade"]
-        )
+        confiabilidade = (resultado["avaliacoes"]["confiabilidade_laudo_gerado"]["confiabilidade"])
 
-        if isinstance(
-            confiabilidade,
-            str
-        ):
+        if isinstance(confiabilidade,str):
 
-            confiabilidade = (
-                confiabilidade
-                .replace("%", "")
-            )
+            confiabilidade = (confiabilidade.replace("%", ""))
 
-        confiabilidade = float(
-            confiabilidade
-        )
+        confiabilidade = float(confiabilidade)
 
-        valores[modelo].append(
-            confiabilidade
-        )
+        valores[modelo].append(confiabilidade)
 
     medias = {}
 
     for modelo, notas in valores.items():
 
-        medias[modelo] = (
-            sum(notas) / len(notas)
-        )
+        medias[modelo] = (sum(notas) / len(notas))
 
     return medias
